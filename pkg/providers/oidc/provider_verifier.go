@@ -6,6 +6,7 @@ import (
 	"fmt"
 
 	"github.com/coreos/go-oidc/v3/oidc"
+	"github.com/oauth2-proxy/oauth2-proxy/v7/pkg/logger"
 	k8serrors "k8s.io/apimachinery/pkg/util/errors"
 )
 
@@ -47,6 +48,8 @@ type ProviderVerifierOptions struct {
 	// SupportedSigningAlgs is the list of signature algorithms supported by the
 	// provider.
 	SupportedSigningAlgs []string
+
+	SkipExpiryCheck bool
 }
 
 // validate checks that the required options are present before attempting to create
@@ -79,10 +82,12 @@ func (p ProviderVerifierOptions) toVerificationOptions() IDTokenVerificationOpti
 
 // toOIDCConfig returns an oidc.Config based on the configured options.
 func (p ProviderVerifierOptions) toOIDCConfig() *oidc.Config {
+	logger.Printf("SkipExpiryCheck: %t", p.SkipExpiryCheck)
 	return &oidc.Config{
 		ClientID:             p.ClientID,
 		SkipIssuerCheck:      p.SkipIssuerVerification,
 		SkipClientIDCheck:    true,
+		SkipExpiryCheck:      p.SkipExpiryCheck,
 		SupportedSigningAlgs: p.SupportedSigningAlgs,
 	}
 }
