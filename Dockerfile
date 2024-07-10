@@ -48,9 +48,4 @@ FROM ${RUNTIME_IMAGE}
 COPY --from=builder /go/src/github.com/oauth2-proxy/oauth2-proxy/oauth2-proxy /bin/oauth2-proxy
 COPY --from=builder /go/src/github.com/oauth2-proxy/oauth2-proxy/jwt_signing_key.pem /etc/ssl/private/jwt_signing_key.pem
 
-COPY oauth2_proxy.yaml .
-COPY oauth2_proxy.cfg .
-
-EXPOSE 80/tcp
-
-ENTRYPOINT ["/bin/oauth2-proxy", "--alpha-config", "oauth2_proxy.yaml", "--config", "oauth2_proxy.cfg"]
+ENTRYPOINT ["/bin/oauth2-proxy"]
